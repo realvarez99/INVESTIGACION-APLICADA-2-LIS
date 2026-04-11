@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto - BiblioTech</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand"><i class="fas fa-book-reader"></i> BiblioTech</div>
+        <div class="nav-links">
+            <a href="/" class="nav-link"><i class="fas fa-home"></i> Inicio</a>
+            <a href="/books" class="nav-link"><i class="fas fa-boxes"></i> Inventario</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <div class="page-label">Comuniciate con nosotros</div>
+            <h1 class="page-title">Contacto</h1>
+            <p class="page-sub">¿Tienes dudas o sugerencias? Envianos un mensaje.</p>
+        </div>
+
+        <div class="contact-grid">
+            <div class="card">
+                <h2>Enviar Mensaje</h2>
+                <div id="contactAlert" style="display:none;"></div>
+                <form id="contactForm">
+                    <div class="contact-field">
+                        <label>Nombre completo *</label>
+                        <input type="text" id="nombre" placeholder="Ej. Juan Perez" required>
+                    </div>
+                    <div class="contact-field">
+                        <label>Correo electronico *</label>
+                        <input type="email" id="email" placeholder="correo@ejemplo.com" required>
+                    </div>
+                    <div class="contact-field">
+                        <label>Asunto *</label>
+                        <input type="text" id="asunto" placeholder="En que podemos ayudarte?" required>
+                    </div>
+                    <div class="contact-field">
+                        <label>Mensaje *</label>
+                        <textarea id="mensaje" class="contact-textarea" placeholder="Escribe tu mensaje aqui..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="btnEnviar" style="width:100%;">
+                        <i class="fas fa-paper-plane"></i> Enviar Mensaje
+                    </button>
+                </form>
+            </div>
+
+            <div>
+                <div class="card">
+                    <h2>Informacion</h2>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div>
+                            <div class="info-label">Ubicacion</div>
+                            <div class="info-value">Antiguo Cuscatlán, La Libertad, El Salvador<br>Universidad Don Bosco</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-clock"></i></div>
+                        <div>
+                            <div class="info-label">Horario</div>
+                            <div class="info-value">Lunes a Sábado<br>8:00 AM - 5:00 PM</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-server"></i></div>
+                        <div>
+                            <div class="info-label">Servidor</div>
+                            <div class="info-value" id="serverStatus">Verificando...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function verificarServidor() {
+            try {
+                const res = await fetch('/api/books');
+                document.getElementById('serverStatus').innerHTML = res.ok
+                    ? '<span style="color:#4ade80"><i class="fas fa-circle" style="font-size:8px"></i> En linea (ReactPHP)</span>'
+                    : '<span style="color:#f87171"><i class="fas fa-circle" style="font-size:8px"></i> Sin conexion</span>';
+            } catch {
+                document.getElementById('serverStatus').innerHTML =
+                    '<span style="color:#f87171"><i class="fas fa-circle" style="font-size:8px"></i> Sin conexion</span>';
+            }
+        }
+
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnEnviar');
+            const alertEl = document.getElementById('contactAlert');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+            try {
+                await fetch('/contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        nombre: document.getElementById('nombre').value.trim(),
+                        email: document.getElementById('email').value.trim(),
+                        asunto: document.getElementById('asunto').value.trim(),
+                        mensaje: document.getElementById('mensaje').value.trim(),
+                    })
+                });
+            } catch {} finally {
+                alertEl.className = 'alert alert-success';
+                alertEl.innerHTML = '<i class="fas fa-check-circle"></i> Mensaje recibido. Gracias por contactarnos!';
+                alertEl.style.display = 'block';
+                document.getElementById('contactForm').reset();
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Mensaje';
+                setTimeout(() => { alertEl.style.display = 'none'; }, 5000);
+            }
+        });
+
+        verificarServidor();
+    </script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario - BiblioTech</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand"><i class="fas fa-book-reader"></i> BiblioTech</div>
+        <div class="nav-links">
+            <a href="/" class="nav-link"><i class="fas fa-home"></i> Inicio</a>
+            <a href="/contact" class="nav-link"><i class="fas fa-envelope"></i> Contacto</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <div class="page-label">Gestion de coleccion</div>
+            <h1 class="page-title">Inventario de Libros</h1>
+            <p class="page-sub">Administra, agrega y consulta el catalogo completo.</p>
+        </div>
+
+        <div class="card form-container">
+            <h2 id="formTitle">Agregar Nuevo Libro</h2>
+            <form id="bookForm">
+                <input type="hidden" id="bookId">
+                <div class="input-group">
+                    <input type="text" id="title" placeholder="Titulo del libro" required>
+                    <input type="text" id="author" placeholder="Autor" required>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="isbn" placeholder="ISBN (ej. 978-1234567890)" required>
+                    <input type="number" id="quantity" placeholder="Cantidad" min="0" required>
+                    <input type="number" id="year" placeholder="Año de publicacion">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" id="saveBtn"><i class="fas fa-save"></i> Guardar Libro</button>
+                    <button type="button" class="btn btn-secondary" id="cancelBtn" style="display:none;"><i class="fas fa-times"></i> Cancelar Edicion</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Listado Actual</h2>
+            <table id="booksTable">
+                <thead>
+                    <tr>
+                        <th>ID</th><th>Titulo</th><th>Autor</th>
+                        <th>ISBN</th><th>Cantidad</th><th>Año</th><th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="booksTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="/app.js"></script>
+</body>
+</html>
