@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio - BiblioTech</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand"><i class="fas fa-book-reader"></i> BiblioTech</div>
+        <div class="nav-links">
+            <a href="/books" class="nav-link"><i class="fas fa-boxes"></i> Inventario</a>
+            <a href="/contact" class="nav-link"><i class="fas fa-envelope"></i> Contacto</a>
+        </div>
+    </nav>
+
+    <div class="container main-dashboard">
+        <div class="hero-section">
+            <h1>Bienvenido a <span>BiblioTech</span></h1>
+            <p>Administracion asincrona basada en eventos (Event-Driven)</p>
+            <a href="/books" class="btn btn-primary btn-large"><i class="fas fa-boxes"></i> Ir al Inventario</a>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-book"></i></div>
+                <div class="stat-info">
+                    <h3>Titulos Diferentes</h3>
+                    <p id="totalTitles">-</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-layer-group"></i></div>
+                <div class="stat-info">
+                    <h3>Total de Ejemplares</h3>
+                    <p id="totalStock">-</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-server"></i></div>
+                <div class="stat-info">
+                    <h3>Estado del Servidor</h3>
+                    <p class="status-online" id="serverStatus"><i class="fas fa-circle"></i> En linea (ReactPHP)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('/api/books');
+                const json = await response.json();
+                if (json.success) {
+                    const books = json.data;
+                    document.getElementById('totalTitles').innerText = books.length;
+                    document.getElementById('totalStock').innerText = books.reduce((sum, b) => sum + parseInt(b.quantity || 0), 0);
+                }
+            } catch (error) {
+                document.getElementById('totalTitles').innerText = '-';
+                document.getElementById('totalStock').innerText = '-';
+                document.getElementById('serverStatus').innerHTML = '<i class="fas fa-circle" style="color:#f87171"></i> <span style="color:#f87171">Sin conexion</span>';
+            }
+        });
+    </script>
+</body>
+</html>
